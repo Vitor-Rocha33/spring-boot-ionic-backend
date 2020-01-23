@@ -3,6 +3,7 @@ package com.vitor.cursomc.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.vitor.cursomc.domain.Categoria;
 import com.vitor.cursomc.dto.CategoriaDTO;
 import com.vitor.cursomc.services.exceptions.DataIntegrityException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.vitor.cursomc.domain.Categoria;
 import com.vitor.cursomc.repositories.CategoriaRepository;
 import com.vitor.cursomc.services.exceptions.ObjectNotFoundException;
 
@@ -34,10 +34,11 @@ public class CategoriaService {
 		return repo.save(obj);
 	}
 
-	public Categoria update(Categoria obj) {
-		find(obj.getId());
-		return repo.save(obj);
-	}
+    public Categoria update(Categoria obj) {
+        Categoria newObj = find(obj.getId());
+        updateData(newObj, obj);
+        return repo.save(newObj);
+    }
 
 	public void delete (Integer id) {
 		find(id);
@@ -60,5 +61,9 @@ public class CategoriaService {
 	public Categoria fromDTO(CategoriaDTO objDto) {
 		return new Categoria(objDto.getId(), objDto.getNome());
 	}
+
+    private void updateData (Categoria newObj, Categoria obj) {
+        newObj.setNome(obj.getNome());
+    }
 
 }
